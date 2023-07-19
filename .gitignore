@@ -1,0 +1,61 @@
+# Ignorar archivos y directorios generados por el compilador de C#
+bin/
+obj/
+
+# Ignorar archivos de configuración específicos de Visual Studio
+.vs/
+*.user
+*.suo
+*.sln.docstates
+
+# Ignorar archivos de caché y registros
+[Tt]humbs.db
+*.log
+*.vspscc
+*.vssscc
+*.psess
+*.vsp
+*.cache
+*.ncrunch*
+*.dotCover
+*.dbmdl
+*.dbproj.schemaview
+*.pfx
+*.publishsettings
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Ignorar archivos de compilación
+*.dll
+*.exe
+*.pdb
+*.dll.config
+
+# Ignorar archivos generados por el IDE (Visual Studio, Rider, etc.)
+*.VisualState.xml
+*.csproj.user
+*.resx
+*.[Cc]ache
+*.bak
+*.cache
+*.resharper
+*.resharper.user
+
+# Ignorar archivos de configuración de desarrollo local
+appsettings.Development.json
+
+# Ignorar archivos de paquetes NuGet
+*.nupkg
+packages/
+
+# Ignorar archivos generados por diferentes herramientas de construcción
+[Dd]ebug/
+[Rr]elease/
+_ReSharper.*
+
+# Ignorar archivo de configuración de estilo de codificación EditorConfig
+.editorconfig
+
+# Ignorar carpeta de migraciones de Entity Framework
+**/Migrations/
