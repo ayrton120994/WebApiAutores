@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.Entidades;
 using WebApiAutores.Servicios;
@@ -34,6 +35,7 @@ namespace WebApiAutores.Controllers
 
 
         [HttpGet("GUID")]
+        [ResponseCache(Duration = 10)]
         public ActionResult ObtenerGuids()
         {
             return Ok(new
@@ -45,12 +47,14 @@ namespace WebApiAutores.Controllers
                 AutoresControllerSingleton = _servicioSingleton.Guid,
                 ServicioASingleton = _servicio.ObtenerSingleton(),
             });
-                
+
         }
 
         [HttpGet] // api/autores
         [HttpGet("listado")] // api/autores/listado
         [HttpGet("/listado")] // listado
+        [ResponseCache(Duration = 10)]
+        [Authorize]
         public async Task<List<Autor>> Get()
         {
             logger.LogInformation("Estamos obteniendo los autores");
