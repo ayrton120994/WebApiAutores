@@ -4,13 +4,15 @@ using WebApiAutores.Validaciones;
 
 namespace WebApiAutores.Entidades
 {
-    public class Autor : IValidatableObject
+    public class Autor
+    //: IValidatableObject
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "El {0} del campo es requerido")]
         [StringLength(maximumLength: 120, ErrorMessage = "El campo {0} no debe tener más de {1} carácteres")]
-        //[PrimeraLetraMayuscula]
+        [PrimeraLetraMayuscula]
         public string Nombre { get; set; }
+        
         #region Ejemplo - Reglas de Validacion
         //[Range(18, 120)]
         //[NotMapped]
@@ -22,24 +24,24 @@ namespace WebApiAutores.Entidades
         //[NotMapped]
         //public string Url { get; set; } 
         #endregion
-        public List<Libro> Libros { get; set; }
+        //public List<Libro> Libros { get; set; }
         //public int Menor { get; set; }
         //public int Mayor { get; set; }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (!string.IsNullOrEmpty(Nombre))
-            {
-                var primeraLetra = Nombre[0].ToString();
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //    if (!string.IsNullOrEmpty(Nombre))
+        //    {
+        //        var primeraLetra = Nombre[0].ToString();
 
-                if (primeraLetra != primeraLetra.ToUpper())
-                {
-                    yield return new ValidationResult(
-                        "La primera letra debe ser mayúscula",
-                        new List<string>() { nameof(Nombre) }
-                        );
-                }
-            }
+        //        if (primeraLetra != primeraLetra.ToUpper())
+        //        {
+        //            yield return new ValidationResult(
+        //                "La primera letra debe ser mayúscula",
+        //                new List<string>() { nameof(Nombre) }
+        //                );
+        //        }
+        //    }
 
             //if(Menor > Mayor)
             //{
@@ -48,6 +50,6 @@ namespace WebApiAutores.Entidades
             //        new List<string> { nameof(Menor) }
             //        );
             //}
-        }
+        //}
     }
 }

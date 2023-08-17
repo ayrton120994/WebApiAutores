@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.Entidades;
-using WebApiAutores.Filtros;
-using WebApiAutores.Servicios;
 
 namespace WebApiAutores.Controllers
 {
@@ -12,69 +9,21 @@ namespace WebApiAutores.Controllers
     public class AutoresController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly IServicio _servicio;
-        private readonly ServicioTransient _servicioTransient;
-        private readonly ServicioScoped _servicioScoped;
-        private readonly ServicioSingleton _servicioSingleton;
-        private readonly ILogger<AutoresController> logger;
 
         public AutoresController(
-            ApplicationDbContext context,
-            IServicio servicio,
-            ServicioTransient servicioTransient,
-            ServicioScoped servicioScoped,
-            ServicioSingleton servicioSingleton,
-            ILogger<AutoresController> logger)
+            ApplicationDbContext context)
         {
             _context = context;
-            _servicio = servicio;
-            this._servicioTransient = servicioTransient;
-            this._servicioScoped = servicioScoped;
-            this._servicioSingleton = servicioSingleton;
-            this.logger = logger;
-        }
-
-
-        [HttpGet("GUID")]
-        //[ResponseCache(Duration = 10)]
-        [ServiceFilter(typeof(MiFiltroDeAccion))]
-        public ActionResult ObtenerGuids()
-        {
-            return Ok(new
-            {
-                AutoresControllerTransient = _servicioTransient.Guid,
-                ServicioATransient = _servicio.ObtenerTransient(),
-                AutoresControllerScoped = _servicioScoped.Guid,
-                ServicioAScoped = _servicio.ObtenerScoped(),
-                AutoresControllerSingleton = _servicioSingleton.Guid,
-                ServicioASingleton = _servicio.ObtenerSingleton(),
-            });
-
         }
 
         [HttpGet] // api/autores
-        [HttpGet("listado")] // api/autores/listado
-        [HttpGet("/listado")] // listado
-        //[ResponseCache(Duration = 10)]
-        //[Authorize]
-        [ServiceFilter(typeof(MiFiltroDeAccion))]
         public async Task<List<Autor>> Get()
         {
-            throw new NotImplementedException();
-            logger.LogInformation("Estamos obteniendo los autores");
-            logger.LogCritical("Estamos obteniendo los autores");
-            _servicio.RealizarTarea();
-            return await _context.Autores.Include(x => x.Libros).ToListAsync();
+            return await _context.Autores.ToListAsync();
         }
 
-        [HttpGet("primero")] // api/autores/primero
-        public async Task<ActionResult<Autor>> PrimerAutor([FromHeader] int miValor, [FromQuery] string nombre)
-        {
-            return await _context.Autores.FirstOrDefaultAsync();
-        }
-
-        [HttpGet("{id:int}/{param2=ayrton}")]
-        public async Task<ActionResult<Autor>> Get(int id, string param2)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Autor>> Get(int id)
         {
             var autor = await _context.Autores.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -149,6 +98,5 @@ namespace WebApiAutores.Controllers
 
             return Ok();
         }
-
     }
 }
