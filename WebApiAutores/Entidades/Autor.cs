@@ -12,7 +12,7 @@ namespace WebApiAutores.Entidades
         [StringLength(maximumLength: 120, ErrorMessage = "El campo {0} no debe tener más de {1} carácteres")]
         [PrimeraLetraMayuscula]
         public string Nombre { get; set; }
-        
+
         #region Ejemplo - Reglas de Validacion
         //[Range(18, 120)]
         //[NotMapped]
@@ -43,13 +43,13 @@ namespace WebApiAutores.Entidades
         //        }
         //    }
 
-            //if(Menor > Mayor)
-            //{
-            //    yield return new ValidationResult(
-            //        "Este valor no puede ser más grande que el campo Mayor",
-            //        new List<string> { nameof(Menor) }
-            //        );
-            //}
+        //if(Menor > Mayor)
+        //{
+        //    yield return new ValidationResult(
+        //        "Este valor no puede ser más grande que el campo Mayor",
+        //        new List<string> { nameof(Menor) }
+        //        );
+        //}
         //}
     }
 }
