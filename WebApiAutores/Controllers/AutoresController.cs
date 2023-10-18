@@ -26,7 +26,7 @@ namespace WebApiAutores.Controllers
             return _mapper.Map<List<AutorDTO>>(autores);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "obtenerAutor")]
         public async Task<ActionResult<AutorDTOConLibros>> Get(int id)
         {
             var autor = await _context.Autores
@@ -51,7 +51,6 @@ namespace WebApiAutores.Controllers
             return _mapper.Map<List<AutorDTO>>(autores);
         }
 
-
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] AutorCreacionDTO autorCreacionDTO)
         {
@@ -67,7 +66,9 @@ namespace WebApiAutores.Controllers
             _context.Add(autor);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            var autorDTO = _mapper.Map<AutorDTO>(autor);
+
+            return CreatedAtRoute("obtenerAutor", new { id = autor.Id }, autorDTO);
         }
 
         [HttpPut("{id:int}")] //api/autores/2
