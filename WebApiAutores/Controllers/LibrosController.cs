@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.DTOs;
@@ -99,5 +100,36 @@ namespace WebApiAutores.Controllers
             return NoContent();
         }
 
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult> Patch(int id, JsonPatchDocument<LibroPatchDTO> patchDocument)
+        {
+            if (patchDocument == null)
+            {
+                return BadRequest();
+            }
+
+            var libroDB = await _context.Libros.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (libroDB == null)
+            {
+                return BadRequest();
+            }
+
+            var libroDTO = _mapper.Map<LibroPatchDTO>(libroDB);
+
+            patchDocument.ApplyTo(libroDTO, ModelState);
+
+            var esValido = TryValidateModel(libroDTO);
+
+            if (!esValido)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _mapper.Map(libroDTO, libroDB);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

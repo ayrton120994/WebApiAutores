@@ -14,9 +14,11 @@ namespace WebApiAutores.Utilidades
                 .ForMember(autorDTO => autorDTO.Libros, opciones => opciones.MapFrom(MapAutorDTOLibros));
             CreateMap<LibroCreacionDTO, Libro>()
                 .ForMember(libro => libro.AutoresLibros, opciones => opciones.MapFrom(MapAutoresLibros));
-            CreateMap<Libro, LibroDTO>();
+            CreateMap<Libro, LibroDTO>().ReverseMap();
             CreateMap<Libro, LibroDTOConAutores>()
                 .ForMember(libroDTO => libroDTO.Autores, opciones => opciones.MapFrom(MapLibroDTOAutores));
+            CreateMap<LibroPatchDTO, Libro>().ReverseMap();
+            CreateMap<LibroCreacionDTO, Libro>();
             CreateMap<ComentarioCreacionDTO, Comentario>();
             CreateMap<Comentario, ComentarioDTO>();
         }
@@ -71,7 +73,7 @@ namespace WebApiAutores.Utilidades
             foreach (var autorLibro in libro.AutoresLibros)
             {
                 resultado.Add(new AutorDTO()
-                { 
+                {
                     Id = autorLibro.AutorId,
                     Nombre = autorLibro.Autor.Nombre
                 });
