@@ -9,6 +9,7 @@ using WebApiAutores.Filtros;
 using WebApiAutores.Middlewares;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace WebApiAutores
 {
@@ -16,6 +17,7 @@ namespace WebApiAutores
     {
         public Startup(IConfiguration configuration)
         {
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             Configuration = configuration;
         }
 
