@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WebApiAutores.DTOs;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApiAutores.Controllers
 {
@@ -14,11 +15,14 @@ namespace WebApiAutores.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public CuentasController(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public CuentasController(UserManager<IdentityUser> userManager,
+            IConfiguration configuration, SignInManager<IdentityUser> signInManager)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _signInManager = signInManager;
         }
 
         [HttpPost("registrar")] //api/cuentas/registrar
@@ -39,6 +43,24 @@ namespace WebApiAutores.Controllers
             else
             {
                 return BadRequest(resultado.Errors);
+            }
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<RespuestaAutenticacion>> Login(CredencialesUsuario credencialesUsuario)
+        {
+            var resultado = await _signInManager.PasswordSignInAsync(
+                credencialesUsuario.Email,
+                credencialesUsuario.Password, isPersistent: false,
+                lockoutOnFailure: false);
+
+            if (resultado.Succeeded)
+            {
+                return ConstruirToken(credencialesUsuario);
+            }
+            else
+            {
+                return BadRequest("Login incorrecto");
             }
         }
 

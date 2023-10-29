@@ -7,6 +7,8 @@ using System.Text.Json.Serialization;
 using WebApiAutores.Controllers;
 using WebApiAutores.Filtros;
 using WebApiAutores.Middlewares;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace WebApiAutores
 {
@@ -32,7 +34,16 @@ namespace WebApiAutores
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opciones => opciones.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["llavejwt"])),
+                    ClockSkew = TimeSpan.Zero
+                });
 
             services.AddSwaggerGen(c =>
             {
@@ -52,7 +63,7 @@ namespace WebApiAutores
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();  
+                app.UseDeveloperExceptionPage();
             }
 
             app.UseSwagger();
