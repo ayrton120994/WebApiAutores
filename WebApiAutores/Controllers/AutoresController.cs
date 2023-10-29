@@ -24,7 +24,7 @@ namespace WebApiAutores.Controllers
         [HttpGet("configuraciones")]
         public ActionResult<string> ObtenerConfiguracion()
         {
-            return _configuration["ConnectionStrings:DefaultConnection"];
+            return _configuration["apellido"];
         }
 
         [HttpGet] // api/autores
