@@ -12,11 +12,19 @@ namespace WebApiAutores.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-        public AutoresController(ApplicationDbContext context, IMapper mapper)
+        public AutoresController(ApplicationDbContext context, IMapper mapper, IConfiguration configuration)
         {
             _context = context;
             _mapper = mapper;
+            _configuration = configuration;
+        }
+
+        [HttpGet("configuraciones")]
+        public ActionResult<string> ObtenerConfiguracion()
+        {
+            return _configuration["ConnectionStrings:DefaultConnection"];
         }
 
         [HttpGet] // api/autores
