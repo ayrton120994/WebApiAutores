@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
+using WebApiAutores.Servicios;
 
 namespace WebApiAutores.Controllers
 {
@@ -19,16 +20,33 @@ namespace WebApiAutores.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly HashService _hashService;
         private readonly IDataProtector _dataProtector;
 
         public CuentasController(UserManager<IdentityUser> userManager,
             IConfiguration configuration, SignInManager<IdentityUser> signInManager,
-            IDataProtectionProvider dataProtectionProvider)
+            IDataProtectionProvider dataProtectionProvider,
+            HashService hashService)
         {
             _userManager = userManager;
             _configuration = configuration;
             _signInManager = signInManager;
+            _hashService = hashService;
             _dataProtector = dataProtectionProvider.CreateProtector("valor_unico_y_quizas_secreto");
+        }
+
+        [HttpGet("hash/{textoPlano}")]
+        public ActionResult RealizarHash(string textoPlano)
+        {
+            var resultado1 = _hashService.Hash(textoPlano);
+            var resultado2 = _hashService.Hash(textoPlano);
+
+            return Ok(new
+            {
+                TextoPlano = textoPlano,
+                Hash1 = resultado1,
+                Hash2 = resultado2,
+            });
         }
 
         [HttpGet("encriptar")]

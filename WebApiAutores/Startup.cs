@@ -10,6 +10,7 @@ using WebApiAutores.Middlewares;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using WebApiAutores.Servicios;
 
 namespace WebApiAutores
 {
@@ -97,6 +98,8 @@ namespace WebApiAutores
             });
 
             services.AddDataProtection();
+
+            services.AddTransient<HashService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
