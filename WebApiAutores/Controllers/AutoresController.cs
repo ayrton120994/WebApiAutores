@@ -30,7 +30,7 @@ namespace WebApiAutores.Controllers
         //    return _configuration["apellido"];
         //}
 
-        [HttpGet] // api/autores
+        [HttpGet(Name = "obtenerAutores")] // api/autores
         [AllowAnonymous]
         public async Task<List<AutorDTO>> Get()
         {
@@ -54,7 +54,7 @@ namespace WebApiAutores.Controllers
             return _mapper.Map<AutorDTOConLibros>(autor);
         }
 
-        [HttpGet("{nombre}")]
+        [HttpGet("{nombre}", Name = "obtenerAutorePorNombre")]
         public async Task<ActionResult<List<AutorDTO>>> Get([FromRoute] string nombre)
         {
 
@@ -63,7 +63,7 @@ namespace WebApiAutores.Controllers
             return _mapper.Map<List<AutorDTO>>(autores);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "crearAutor")]
         public async Task<ActionResult> Post([FromBody] AutorCreacionDTO autorCreacionDTO)
         {
             var existeAutorConElMismoNombre = await _context.Autores.AnyAsync(x => x.Nombre == autorCreacionDTO.Nombre);
@@ -83,7 +83,7 @@ namespace WebApiAutores.Controllers
             return CreatedAtRoute("obtenerAutor", new { id = autor.Id }, autorDTO);
         }
 
-        [HttpPut("{id:int}")] //api/autores/2
+        [HttpPut("{id:int}", Name = "actualizarAutor")] //api/autores/2
         public async Task<ActionResult> Put(AutorCreacionDTO autorCreacionDTO, int id)
         {
             var existe = await _context.Autores.AnyAsync(x => x.Id == id);
@@ -101,7 +101,7 @@ namespace WebApiAutores.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id:int}")] //api/autores/2
+        [HttpDelete("{id:int}", Name = "borrarAutor")] //api/autores/2
         public async Task<ActionResult> Delete(int id)
         {
             var existe = await _context.Autores.AnyAsync(x => x.Id == id);
