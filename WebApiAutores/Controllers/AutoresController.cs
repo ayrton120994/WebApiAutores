@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.DTOs;
 using WebApiAutores.Entidades;
+using WebApiAutores.Utilidades;
 
 namespace WebApiAutores.Controllers
 {
@@ -42,7 +43,7 @@ namespace WebApiAutores.Controllers
             if (incluirHATEOAS)
             {
                 var esAdmin = await _authorizationService.AuthorizeAsync(User, "esAdmin");
-                dtos.ForEach(dto => GenerarEnlace(dto, esAdmin.Succeeded));
+                //dtos.ForEach(dto => GenerarEnlace(dto, esAdmin.Succeeded));
 
                 var resultado = new ColeccionDeRecursos<AutorDTO> { Valores = dtos };
 
@@ -61,7 +62,8 @@ namespace WebApiAutores.Controllers
 
         [HttpGet("{id:int}", Name = "obtenerAutor")]
         [AllowAnonymous]
-        public async Task<ActionResult<AutorDTOConLibros>> Get(int id)
+        [ServiceFilter(typeof(HATEOASAutorFilterAttribute))]
+        public async Task<ActionResult<AutorDTOConLibros>> Get(int id, [FromHeader] string incluirHATEOAS)
         {
             var autor = await _context.Autores
                 .Include(autorDB => autorDB.AutoresLibros)
@@ -74,20 +76,8 @@ namespace WebApiAutores.Controllers
             }
 
             var dto = _mapper.Map<AutorDTOConLibros>(autor);
-            var esAdmin = await _authorizationService.AuthorizeAsync(User, "esAdmin");
-            GenerarEnlace(dto, esAdmin.Succeeded);
 
             return dto;
-        }
-
-        private void GenerarEnlace(AutorDTO autorDTO, bool esAdmin)
-        {
-            autorDTO.Enlaces.Add(new DatoHATEOAS(Url.Link("obtenerAutor", new { Id = autorDTO.Id }), "self", "GET"));
-            if (esAdmin)
-            {
-                autorDTO.Enlaces.Add(new DatoHATEOAS(Url.Link("actualizarAutor", new { Id = autorDTO.Id }), "autor-actualizar", "PUT"));
-                autorDTO.Enlaces.Add(new DatoHATEOAS(Url.Link("borrarAutor", new { Id = autorDTO.Id }), "borrar-autor", "DELETE"));
-            }
         }
 
         [HttpGet("{nombre}", Name = "obtenerAutorePorNombre")]

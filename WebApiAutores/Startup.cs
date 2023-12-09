@@ -11,6 +11,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using WebApiAutores.Servicios;
+using WebApiAutores.Utilidades;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace WebApiAutores
 {
@@ -88,6 +90,10 @@ namespace WebApiAutores
                 opciones.AddPolicy("EsAdmin", politica => politica.RequireClaim("esAdmin"));
             });
 
+            services.AddDataProtection();
+
+            services.AddTransient<HashService>();
+
             services.AddCors(opciones =>
             {
                 opciones.AddDefaultPolicy(builder =>
@@ -97,9 +103,9 @@ namespace WebApiAutores
                 });
             });
 
-            services.AddDataProtection();
-
-            services.AddTransient<HashService>();
+            services.AddTransient<GeneradorEnlaces>();
+            services.AddTransient<HATEOASAutorFilterAttribute>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
