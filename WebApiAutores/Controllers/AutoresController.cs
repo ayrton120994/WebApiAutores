@@ -35,29 +35,12 @@ namespace WebApiAutores.Controllers
 
         [HttpGet(Name = "obtenerAutores")] // api/autores
         [AllowAnonymous]
-        public async Task<IActionResult> Get([FromQuery] bool incluirHATEOAS = true)
+        [ServiceFilter(typeof(HATEOASAutorFilterAttribute))]
+        public async Task<ActionResult<List<AutorDTO>>> Get([FromHeader] string incluirHATEOAS)
         {
             var autores = await _context.Autores.ToListAsync();
             var dtos = _mapper.Map<List<AutorDTO>>(autores);
-
-            if (incluirHATEOAS)
-            {
-                var esAdmin = await _authorizationService.AuthorizeAsync(User, "esAdmin");
-                //dtos.ForEach(dto => GenerarEnlace(dto, esAdmin.Succeeded));
-
-                var resultado = new ColeccionDeRecursos<AutorDTO> { Valores = dtos };
-
-                resultado.Enlaces.Add(new DatoHATEOAS(Url.Link("obtenerAutores", new { }), "self", "GET"));
-
-                if (esAdmin.Succeeded)
-                {
-                    resultado.Enlaces.Add(new DatoHATEOAS(Url.Link("crearAutor", new { }), "crear-autor", "POST"));
-                }
-
-                return Ok(resultado);
-            }
-
-            return Ok(dtos);
+            return dtos;
         }
 
         [HttpGet("{id:int}", Name = "obtenerAutor")]
@@ -81,7 +64,7 @@ namespace WebApiAutores.Controllers
         }
 
         [HttpGet("{nombre}", Name = "obtenerAutorePorNombre")]
-        public async Task<ActionResult<List<AutorDTO>>> Get([FromRoute] string nombre)
+        public async Task<ActionResult<List<AutorDTO>>> GetPorNombre([FromRoute] string nombre)
         {
 
             var autores = await _context.Autores.Where(autorBD => autorBD.Nombre.Contains(nombre)).ToListAsync();
