@@ -13,7 +13,10 @@ using System.IdentityModel.Tokens.Jwt;
 using WebApiAutores.Servicios;
 using WebApiAutores.Utilidades;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace WebApiAutores
 {
     public class Startup
@@ -53,8 +56,27 @@ namespace WebApiAutores
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIAutores", Version = "v1" });
-                c.SwaggerDoc("v2", new OpenApiInfo { Title = "WebAPIAutores", Version = "v2" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "WebAPIAutores",
+                    Version = "v1",
+                    Description = "Esto es un web api para trabajar con autores y libros",
+                    Contact = new OpenApiContact()
+                    {
+                        Email = "ayrtoncesar12@gmail.com",
+                        Name = "Ayrton Cesar",
+                        Url = new Uri("https://www.google.com.pe")
+                    },
+                    License = new OpenApiLicense()
+                    {
+                        Name = "MIT"
+                    }
+                });
+                c.SwaggerDoc("v2", new OpenApiInfo
+                {
+                    Title = "WebAPIAutores",
+                    Version = "v2"
+                });
 
                 c.OperationFilter<AgregarParametroHATEOAS>();
                 c.OperationFilter<AgregarParametroXVersion>();
@@ -82,6 +104,10 @@ namespace WebApiAutores
                     new string[]{}
                     }
                 });
+
+                var archivoXML = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var rutaXML = Path.Combine(AppContext.BaseDirectory, archivoXML);
+                c.IncludeXmlComments(rutaXML);
             });
 
             services.AddAutoMapper(typeof(Startup));

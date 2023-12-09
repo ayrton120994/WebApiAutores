@@ -13,6 +13,7 @@ namespace WebApiAutores.Controllers.V1
     [Route("api/autores")]
     [CabeceraEstaPresente("x-version", "1")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
+    //[ApiConventionType(typeof(DefaultApiConventions))]
     public class AutoresController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -111,6 +112,11 @@ namespace WebApiAutores.Controllers.V1
             return NoContent();
         }
 
+        /// <summary>
+        /// Borra un autor
+        /// </summary>
+        /// <param name="id">Id del autor a borrar</param>
+        /// <returns></returns>
         [HttpDelete("{id:int}", Name = "borrarAutorv1")] //api/autores/2
         public async Task<ActionResult> Delete(int id)
         {
