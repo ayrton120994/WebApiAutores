@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using WebApiAutores.DTOs;
 using WebApiAutores.Entidades;
 
-namespace WebApiAutores.Controllers
+namespace WebApiAutores.Controllers.V1
 {
     [ApiController]
-    [Route("api/libros")]
+    [Route("api/v1/libros")]
     public class LibrosController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -30,7 +30,7 @@ namespace WebApiAutores.Controllers
                 //.Include(libroBD => libroBD.Comentarios)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            if(libro == null)
+            if (libro == null)
             {
                 return NotFound();
             }
@@ -105,7 +105,7 @@ namespace WebApiAutores.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id:int}", Name ="patchLibro")]
+        [HttpPatch("{id:int}", Name = "patchLibro")]
         public async Task<ActionResult> Patch(int id, JsonPatchDocument<LibroPatchDTO> patchDocument)
         {
             if (patchDocument == null)
